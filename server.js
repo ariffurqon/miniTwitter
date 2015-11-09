@@ -6,19 +6,23 @@ var express = require('express'),
 	bodyParser = require('body-parser'),  // for data from the request body
 	mongoose = require('mongoose'),       // to interact with our db
 	morgan = require('morgan');			  // to log request details
-	
+
 // connect to mongodb
 mongoose.connect(
-	  process.env.MONGOLAB_URI ||
-	  process.env.MONGOHQ_URL ||
-	  'mongodb://localhost/minitwitter'
-	);
+  process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL ||
+  'mongodb://localhost/minitwitter'
+);
 
 
 //tell app to use bodyParser & morgan middleware
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+
+var api = require('./app/routes/api')(app, express);
+app.use('/api', api);
+
 
 //set up root route to respond with 'hello lovers..'
 app.get('/', function(req, res){
